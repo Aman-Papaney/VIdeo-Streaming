@@ -3,9 +3,10 @@ const Router = express.Router()
 import bcrypt from "bcrypt"
 import "dotenv/config"
 import {v2 as cloudinary} from "cloudinary"
+import mongoose from "mongoose"
+import jwt from "jsonwebtoken"
 
 import userModel from "../models/userModel.js"
-import mongoose from "mongoose"
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -24,7 +25,7 @@ Router.post("/signin", async (req, res) => {
 		const hashedPassword = await bcrypt.hash(req.body.password, 10)
 
 		const uploadResult = await cloudinary.uploader.upload(req.files.logo.tempFilePath, {
-			public_id: "Logo",
+			public_id: req.body._id,
 		})
 
 		const newUser = new userModel({
@@ -41,6 +42,49 @@ Router.post("/signin", async (req, res) => {
 		res.json({new_user: user})
 	} catch (error) {
 		console.log(`user sign in error ${error.message}`)
+	}
+})
+
+Router.post("/login", async (req, res) => {
+	try {
+		const dupUser = await userModel.find({email: req.body.email})
+		if (dupUser.length == 0) {
+			return res.status(500).json({error: "Email doesn't exixts"})
+		}
+		console.log(dupUser)
+
+		const isPasswordValid = await bcrypt.compare(req.body.password, dupUser[0].password)
+		if (!isPasswordValid) {
+			return res.status(500).json({error: "Incorrect Password"})
+		}
+		// return res.json({error:"Correct Password"})
+
+		const token = jwt.sign(
+			{
+				channelName: dupUser[0].channelName,
+				_id: dupUser[0]._id,
+				email: dupUser[0].email,
+				phone: dupUser[0].phone,
+				logoId: dupUser[0].logoId,
+			},
+			process.env.JWT_SECRET
+		)
+
+		res.json({
+			channelName: dupUser[0].channelName,
+			_id: dupUser[0]._id,
+			email: dupUser[0].email,
+			phone: dupUser[0].phone,
+			logoId: dupUser[0].logoId,
+			logoUrl:dupUser[0].logoUrl,
+			subscribers:dupUser[0].subscribers,
+			subscribedChannels:dupUser[0].subscribedChannels,
+			json_token: token,
+		})
+
+	} catch (error) {
+		console.log(`login error ${error.message}`)
+		res.status(500).json({error: error.message})
 	}
 })
 
