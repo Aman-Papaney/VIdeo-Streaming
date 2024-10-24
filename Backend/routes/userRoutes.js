@@ -1,18 +1,15 @@
 import express from "express"
-const Router = express.Router()
 import bcrypt from "bcrypt"
-import "dotenv/config"
 import {v2 as cloudinary} from "cloudinary"
 import mongoose from "mongoose"
 import jwt from "jsonwebtoken"
 
 import userModel from "../models/userModel.js"
+import configCloud from "../misc/configCloud.js"
 
-cloudinary.config({
-	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+const Router = express.Router()
+
+configCloud()
 
 Router.post("/signin", async (req, res) => {
 	try {
@@ -24,9 +21,7 @@ Router.post("/signin", async (req, res) => {
 
 		const hashedPassword = await bcrypt.hash(req.body.password, 10)
 
-		const uploadResult = await cloudinary.uploader.upload(req.files.logo.tempFilePath, {
-			public_id: req.body._id,
-		})
+		const uploadResult = await cloudinary.uploader.upload(req.files.logo.tempFilePath)
 
 		const newUser = new userModel({
 			_id: new mongoose.Types.ObjectId(),
@@ -42,6 +37,8 @@ Router.post("/signin", async (req, res) => {
 		res.json({new_user: user})
 	} catch (error) {
 		console.log(`user sign in error ${error.message}`)
+		
+		res.status(500).json({error: error.message})
 	}
 })
 
@@ -57,7 +54,6 @@ Router.post("/login", async (req, res) => {
 		if (!isPasswordValid) {
 			return res.status(500).json({error: "Incorrect Password"})
 		}
-		// return res.json({error:"Correct Password"})
 
 		const token = jwt.sign(
 			{
