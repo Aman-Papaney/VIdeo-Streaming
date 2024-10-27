@@ -11,6 +11,7 @@ lerna-debug.log*
 /Backend/node_modules
 /Backend/tmp
 /Backend/.env
+/other.txt
 
 
 dist

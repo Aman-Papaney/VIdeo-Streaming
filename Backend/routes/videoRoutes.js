@@ -32,7 +32,7 @@ Router.post("/upload", checkAuth, async (req, res) => {
 			thumbnailUrl: uploadedThumbnail.secure_url,
 			thumbnailId: uploadedThumbnail.public_id,
 			category: req.body.category,
-			tags: req.body.tags.split(","),
+			tags: req.body.tags.split(", "),
 		})
 
 		const newUploadedVideo = await newVideo.save()
@@ -49,18 +49,16 @@ Router.put("/:videoId", checkAuth, async (req, res) => {
 		const verifiedUser = await jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET)
 
 		const videoDetails = await videoModel.findById(req.params.videoId)
-		console.log(videoDetails);
-		
+		console.log(videoDetails)
 
 		if (videoDetails == null || verifiedUser._id != videoDetails.userId) return res.status(401).json({error: "Unauthorized Access"})
 
 		if (req.files) {
 			await cloudinary.uploader.destroy(videoDetails.thumbnailId)
-			console.log("file deleted");
-			
+			console.log("file deleted")
 
 			const updatedThumbnail = await cloudinary.uploader.upload(req.files.thumbnail.tempFilePath)
-			console.log("file uploaded");
+			console.log("file uploaded")
 
 			const newData = {
 				title: req.body.title,
@@ -71,12 +69,10 @@ Router.put("/:videoId", checkAuth, async (req, res) => {
 				thumbnailId: updatedThumbnail.public_id,
 			}
 
-			const updatedVideoDetail = await videoModel.findByIdAndUpdate(req.params.videoId,newData,{new:true})
-			console.log("db updated + thumbnail");
+			const updatedVideoDetail = await videoModel.findByIdAndUpdate(req.params.videoId, newData, {new: true})
+			console.log("db updated + thumbnail")
 			res.status(200).json(updatedVideoDetail)
-			
-		}
-		else{
+		} else {
 			const newData = {
 				title: req.body.title,
 				description: req.body.description,
@@ -84,16 +80,32 @@ Router.put("/:videoId", checkAuth, async (req, res) => {
 				tags: req.body.tags.split(", "),
 			}
 
-			const updatedVideoDetail = await videoModel.findByIdAndUpdate(req.params.videoId, newData, {new:true})
+			const updatedVideoDetail = await videoModel.findByIdAndUpdate(req.params.videoId, newData, {new: true})
 			console.log("db updated")
 			res.status(200).json(updatedVideoDetail)
-			
 		}
-
-
 	} catch (error) {
 		console.log(`video update  error : ${error.message}`)
 		res.status(500).json({error: error.message})
 	}
 })
+
+Router.delete("/:videoId", checkAuth, async (req, res) => {
+	try {
+		const verifiedUser = await jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET)
+
+		const videoDetails = await videoModel.findById(req.params.videoId)
+
+		if (videoDetails == null || verifiedUser._id !== videoDetails.userId) return res.status(401).json({error: "Unauthorized Access"})
+
+		await cloudinary.uploader.destroy(videoDetails.videoId, {resource_type: "video"})
+		await cloudinary.uploader.destroy(videoDetails.thumbnailId)
+		const deletedResponse = await videoModel.findByIdAndDelete(req.params.videoId)
+		res.status(200).json(deletedResponse)
+	} catch (error) {
+		console.log(`video update  error : ${error.message}`)
+		res.status(500).json({error: error.message})
+	}
+})
+
 export default Router
