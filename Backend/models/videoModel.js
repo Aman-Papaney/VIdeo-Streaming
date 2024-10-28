@@ -53,6 +53,24 @@ const videoSchema = new mongoose.Schema(
 			type: Number,
 			default: 0,
 		},
+		likedBy: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "user",
+			},
+		],
+		dislikedBy: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "user",
+			},
+		],
+		viewedBy: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "user",
+			},
+		],
 	},
 	{timestamps: true}
 )

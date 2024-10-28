@@ -108,4 +108,61 @@ Router.delete("/:videoId", checkAuth, async (req, res) => {
 	}
 })
 
+Router.put("/like/:videoId", checkAuth, async (req, res) => {
+	try {
+		const token = req.headers.authorization.split(" ")[1]
+		const verifiedUser = await jwt.verify(token, process.env.JWT_SECRET)
+
+		const videoDetails = await videoModel.findById(req.params.videoId)
+
+		if (videoDetails.likedBy.includes(verifiedUser._id)) return res.json({message: "Already liked by the user"})
+
+		videoDetails.likes++
+		videoDetails.likedBy.push(verifiedUser._id)
+
+		if (videoDetails.dislikedBy.includes(verifiedUser._id)) {
+			videoDetails.dislikes--
+			videoDetails.dislikedBy = videoDetails.dislikedBy.filter((userId) => userId.toString() != verifiedUser._id)
+		}
+
+		await videoDetails.save()
+		return res.json({
+			likes: videoDetails.likes,
+			dislikes: videoDetails.dislikes,
+		})
+	} catch (error) {
+		console.log(`video like error : ${error.message}`)
+		res.status(500).json({error: error.message})
+	}
+})
+
+Router.put("/dislike/:videoId", checkAuth, async (req, res) => {
+	try {
+		const token = req.headers.authorization.split(" ")[1]
+		const verifiedUser = await jwt.verify(token, process.env.JWT_SECRET)
+
+		const videoDetails = await videoModel.findById(req.params.videoId)
+
+		if (videoDetails.dislikedBy.includes(verifiedUser._id)) return res.json({message: "Already disliked by the user"})
+
+		videoDetails.dislikes++
+		videoDetails.dislikedBy.push(verifiedUser._id)
+
+		if (videoDetails.likedBy.includes(verifiedUser._id)) {
+			videoDetails.likes--
+			videoDetails.likedBy = videoDetails.likedBy.filter((userId) => userId.toString() != verifiedUser._id)
+		}
+
+		await videoDetails.save()
+
+		return res.json({
+			likes: videoDetails.likes,
+			dislikes: videoDetails.dislikes,
+		})
+	} catch (error) {
+		console.log(`video dislike error : ${error.message}`)
+		res.status(500).json({error: error.message})
+	}
+})
+
 export default Router
