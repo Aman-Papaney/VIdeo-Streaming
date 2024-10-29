@@ -65,12 +65,6 @@ const videoSchema = new mongoose.Schema(
 				ref: "user",
 			},
 		],
-		viewedBy: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "user",
-			},
-		],
 	},
 	{timestamps: true}
 )

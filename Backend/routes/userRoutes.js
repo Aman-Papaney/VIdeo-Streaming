@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken"
 
 import userModel from "../models/userModel.js"
 import configCloud from "../misc/configCloud.js"
+import checkAuth from "../middleware/checkAuth.js"
 
 const Router = express.Router()
 
@@ -37,7 +38,7 @@ Router.post("/signin", async (req, res) => {
 		res.json({new_user: user})
 	} catch (error) {
 		console.log(`user sign in error ${error.message}`)
-		
+
 		res.status(500).json({error: error.message})
 	}
 })
@@ -72,14 +73,67 @@ Router.post("/login", async (req, res) => {
 			email: dupUser[0].email,
 			phone: dupUser[0].phone,
 			logoId: dupUser[0].logoId,
-			logoUrl:dupUser[0].logoUrl,
-			subscribers:dupUser[0].subscribers,
-			subscribedChannels:dupUser[0].subscribedChannels,
+			logoUrl: dupUser[0].logoUrl,
+			subscribers: dupUser[0].subscribers,
+			subscribedChannels: dupUser[0].subscribedChannels,
 			json_token: token,
 		})
-
 	} catch (error) {
 		console.log(`login error ${error.message}`)
+		res.status(500).json({error: error.message})
+	}
+})
+
+Router.put("/subscribe/:channelId", checkAuth, async (req, res) => {
+	try {
+		const verifiedUser = await jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET)
+
+		const loggedUser = await userModel.findById(verifiedUser._id)
+
+		const channelDetails = await userModel.findById(req.params.channelId)
+
+		if (loggedUser.subscribedChannels.includes(req.params.channelId)) return res.json({message: "Already subscribed"})
+
+		loggedUser.subscribedChannels.push(req.params.channelId)
+
+		channelDetails.subscribers++
+		channelDetails.subscribedBy.push(loggedUser._id)
+
+		await loggedUser.save()
+		await channelDetails.save()
+
+		return res.json({
+			message: "Subscribed",
+		})
+	} catch (error) {
+		console.log(`subscribe error : ${error.message}`)
+		res.status(500).json({error: error.message})
+	}
+})
+
+Router.put("/unsubscribe/:channelId", checkAuth, async (req, res) => {
+	try {
+		const verifiedUser = await jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET)
+
+		const userDetails = await userModel.findById(verifiedUser._id)
+
+		const channelDetails = await userModel.findById(req.params.channelId)
+
+		if (!userDetails.subscribedChannels.includes(req.params.channelId)) return res.json({message: "You are not subscribed"})
+
+		channelDetails.subscribers--
+		channelDetails.subscribedBy = channelDetails.subscribedBy.filter((id) => id.toString() != userDetails._id)
+
+		userDetails.subscribedChannels = userDetails.subscribedChannels.filter((id) => id.toString() !== req.params.channelId)
+
+		await userDetails.save()
+		await channelDetails.save()
+
+		return res.json({
+			message: "Unsubscribed",
+		})
+	} catch (error) {
+		console.log(`unsubscribe error : ${error.message}`)
 		res.status(500).json({error: error.message})
 	}
 })

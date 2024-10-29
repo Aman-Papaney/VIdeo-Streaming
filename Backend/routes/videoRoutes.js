@@ -122,7 +122,7 @@ Router.put("/like/:videoId", checkAuth, async (req, res) => {
 
 		if (videoDetails.dislikedBy.includes(verifiedUser._id)) {
 			videoDetails.dislikes--
-			videoDetails.dislikedBy = videoDetails.dislikedBy.filter((userId) => userId.toString() != verifiedUser._id)
+			videoDetails.dislikedBy = videoDetails.dislikedBy.filter((userId) => userId.toString() !== verifiedUser._id)
 		}
 
 		await videoDetails.save()
@@ -150,7 +150,7 @@ Router.put("/dislike/:videoId", checkAuth, async (req, res) => {
 
 		if (videoDetails.likedBy.includes(verifiedUser._id)) {
 			videoDetails.likes--
-			videoDetails.likedBy = videoDetails.likedBy.filter((userId) => userId.toString() != verifiedUser._id)
+			videoDetails.likedBy = videoDetails.likedBy.filter((userId) => userId.toString() !== verifiedUser._id)
 		}
 
 		await videoDetails.save()
@@ -161,6 +161,20 @@ Router.put("/dislike/:videoId", checkAuth, async (req, res) => {
 		})
 	} catch (error) {
 		console.log(`video dislike error : ${error.message}`)
+		res.status(500).json({error: error.message})
+	}
+})
+
+Router.put("/view/:videoId", checkAuth, async (req, res) => {
+	try {
+
+		const videoDetails = await videoModel.findById(req.params.videoId)
+		videoDetails.views++
+		await videoDetails.save()
+		res.json({views : videoDetails.views})
+		
+	} catch (error) {
+		console.log(`video view error : ${error.message}`)
 		res.status(500).json({error: error.message})
 	}
 })
