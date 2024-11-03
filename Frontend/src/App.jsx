@@ -1,12 +1,24 @@
+import {BrowserRouter, Route, Routes} from "react-router-dom"
+
 import "./App.css"
+import Login from "./Components/Login/Login"
+import Signup from "./Components/Signup/Signup"
 
 function App() {
-	return(
-     <div>
-      HI
+	return (
+		
+			<BrowserRouter>
 
-    </div>
-  )
+				<Routes>
+					{/* <Route path='/' element={<Home />} /> */}
+					<Route path='/login' element={<Login />} />
+					<Route path='/signup' element={<Signup />} />
+
+					{/* IMPR0VE 404	 */}
+					{/* <Route path='*' element={<NotFound />} /> */}
+				</Routes>
+			</BrowserRouter>
+	)
 }
 
 export default App
