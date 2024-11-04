@@ -14,7 +14,6 @@ function App() {
 					<Route path='/login' element={<Login />} />
 					<Route path='/signup' element={<Signup />} />
 
-					{/* IMPR0VE 404	 */}
 					{/* <Route path='*' element={<NotFound />} /> */}
 				</Routes>
 			</BrowserRouter>
