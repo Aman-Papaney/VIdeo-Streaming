@@ -17,6 +17,7 @@
         display: flex;
         align-items: center;
         flex-direction: column;
+        box-shadow: rgba(148, 148, 148, 0.2) 0px 7px 29px 0px;
 
 		.logo {
 			img {
@@ -28,6 +29,27 @@
         .form{
             display: flex;
             flex-direction: column;
+
+            input,button{
+                height: 50px;
+                width: 400px;
+                padding: 8px;
+                border-radius: 8px;
+                margin-top: 8px;
+                border: none;
+                font-size: 16px;
+            }
+
+            button{
+                font-size: 20px;
+                background-color: #df1b1b;
+                color: white;
+                cursor: pointer;
+            }
+            img {
+				width: 160px;
+				height: 80px;
+			}
 
         }
 	}
