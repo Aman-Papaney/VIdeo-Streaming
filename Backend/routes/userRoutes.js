@@ -37,7 +37,7 @@ Router.post("/signin", async (req, res) => {
 		const user = await newUser.save()
 		res.json({new_user: user})
 	} catch (error) {
-		console.log(`user sign in error ${error.message}`)
+		console.log(`user sign in error ${error}`)
 
 		res.status(500).json({error: error.message})
 	}
