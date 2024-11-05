@@ -1,11 +1,12 @@
 import {useState} from "react"
-import {useNavigate} from "react-router-dom"
+import {useNavigate,Link } from "react-router-dom"
 import axios from "axios"
 
-import "./signup.css"
+import "./signin.css"
 import yt_logo from "../../assets/yt_logo.png"
+import { toast } from "react-toastify"
 
-const Signup = () => {
+const Signin = () => {
 	const navigate = useNavigate()
 
 	// demo details
@@ -21,6 +22,9 @@ const Signup = () => {
 		setLogo(e.target.files[0])
 		setImageUrl(URL.createObjectURL(e.target.files[0]))
 	}
+
+	
+    const notify = (msg) => toast.error(msg)
 
 	const submitHandler = (e) => {
 		setLoading(true)
@@ -41,7 +45,7 @@ const Signup = () => {
 			})
 			.catch((err) => {
 				setLoading(false)
-				console.log(err.response)
+				notify(err.response.data.error)
 			})
 	}
 
@@ -53,6 +57,7 @@ const Signup = () => {
 				</div>
 				<div>
 					<form className='form' onSubmit={submitHandler}>
+
 						<input
 							onChange={(e) => {
 								setEmail(e.target.value)
@@ -92,6 +97,9 @@ const Signup = () => {
 						<input onChange={fileHandler} type='file' required />
 						{imageUrl != null ? <img src={imageUrl} alt=' ' /> : null}
 						<button type='submit'>{isLoading ? <i className='fa-solid fa-spinner fa-spin-pulse' aria-hidden='true'></i> : "Submit"}</button>
+						<div>
+							Already have an Account ? <Link to='/login'>Login Here</Link>
+						</div>
 					</form>
 				</div>
 			</div>
@@ -99,4 +107,4 @@ const Signup = () => {
 	)
 }
 
-export default Signup
+export default Signin

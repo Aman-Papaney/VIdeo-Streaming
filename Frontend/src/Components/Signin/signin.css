@@ -9,7 +9,7 @@
 	flex-direction: column;
 
 	.form-container {
-		height: 80vh;
+		height: fit-content;
 		width: 30%;
 		border-radius: 8px;
 		padding: 8px;
@@ -46,11 +46,17 @@
 				background-color: #df1b1b;
 				color: white;
 				cursor: pointer;
+				margin-bottom: 8px;
 			}
 			img {
 				width: 200px;
 				height: 160px;
 			}
+			a{
+				color: rgb(199, 199, 199);
+				margin-bottom: 8px;
+				text-decoration: none;
+            }
 		}
 	}
 }
