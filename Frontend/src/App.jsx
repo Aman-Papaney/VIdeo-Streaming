@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.min.css"
 import "./App.css"
 import Login from "./Components/Login/Login"
 import Signin from "./Components/Signin/Signin"
-import Home from "./Components/Home/Home"
+import Home from "./Pages/Home/Home"
 
 function App() {
 	return (
