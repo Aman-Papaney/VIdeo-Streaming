@@ -3,7 +3,7 @@ import {useNavigate,Link } from "react-router-dom"
 import axios from "axios"
 
 import "./signin.css"
-import yt_logo from "../../assets/yt_logo.png"
+import yt_logo from "../../assets/yt_logo.svg"
 import { toast } from "react-toastify"
 
 const Signin = () => {

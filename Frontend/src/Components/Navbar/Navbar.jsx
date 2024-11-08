@@ -1,31 +1,26 @@
 import "./navbar.css"
-import MenuIcon from "@mui/icons-material/Menu"
-import VideoCallIcon from "@mui/icons-material/VideoCall"
-import SearchIcon from "@mui/icons-material/Search"
-import yt_logo from "../../assets/yt_logo.png"
-
+import menuIcon from "../../assets/menu.svg"
+import yt_icon from "../../assets/yt_logo.svg"
+import search_icon from "../../assets/search.svg"
+import person_icon from "../../assets/person.png"
 
 const Navbar = () => {
 	return (
 		<div className='navbar'>
 			<div className='navbar-left'>
-				<div className='menu-icon'>
-					<MenuIcon />
-				</div>
+				<img src={menuIcon} alt='MENU' />
 				<div className='logo'>
-					<img src={yt_logo} alt='YouTube' />
+					<img src={yt_icon} alt='YT' />
+					<p>YouTube</p>
 				</div>
 			</div>
 			<div className='navbar-center'>
-				<input type='text' name='searchQuery' id='searchQuery' />
-				<div className="search-icon">
-					<SearchIcon/>
-				</div>
+				<input type='text' name='query' id='query' placeholder='SEARCH' />
+				<img src={search_icon} alt='YT' />
 			</div>
 			<div className='navbar-right'>
-				<div className="upload-video">
-					<VideoCallIcon/>
-				</div>
+				<img src={person_icon} alt='' />
+				<p>Sign In</p>
 			</div>
 		</div>
 	)

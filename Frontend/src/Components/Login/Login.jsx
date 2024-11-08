@@ -4,7 +4,7 @@ import axios from "axios"
 import {toast} from "react-toastify"
 
 import "./login.css"
-import yt_logo from "../../assets/yt_logo.png"
+import yt_logo from "../../assets/yt_logo.svg"
 
 const Login = () => {
 	const navigate = useNavigate()

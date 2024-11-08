@@ -1,55 +1,66 @@
 .navbar {
-	background-color: rgb(121, 121, 121);
 	height: 60px;
 	width: 100%;
-
 	display: flex;
-	align-items: center;
 	justify-content: space-between;
+	background-color: #ebebeb;
+
+	align-items: center;
+	position: sticky;
+	top: 0;
+	img {
+		height: 30px;
+		width: 30px;
+		cursor: pointer;
+	}
 
 	.navbar-left {
-		height: 60px;
 		display: flex;
 		align-items: center;
-
-		.menu-icon {
+		.logo {
 			display: flex;
 			align-items: center;
+			font-size: 24px;
 			cursor: pointer;
-			margin: 0 16px;
 		}
-		.logo {
-			cursor: pointer;
-			img {
-				height: 40px;
-				width: 100px;
-			}
+		img {
+			margin-left: 20px;
 		}
 	}
-    .navbar-center{
-        display: flex;
-        width: 40%;
-        background-color: bisque;
 
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
-        div{
-            display: flex;
-            align-items: center;
-            height: 50px;
-            border-radius: 10px;
-        }
+	.navbar-center {
+		display: flex;
+		align-items: center;
+		input {
+			border-top-left-radius: 30px;
+			border-bottom-left-radius: 30px;
+			width: 700px;
+			text-indent: 12px;
+			font-size: 16px;
+			height: 45px;
+			border: none;
+		}
+		img {
+			height: 45px;
+			width: 48px;
+			background-color: rgb(167, 167, 167);
+			padding: 0 12px;
+			border-top-right-radius: 30px;
+			border-bottom-right-radius: 30px;
+		}
+	}
 
-        #searchQuery{
-            height: 50px;
-            width: 95%;
-
-        }
-    }
-
-
-	/* .navbar-right > .upload-video{
-        height: 100px;
-        width: 100px;
-    } */
+	.navbar-right {
+		display: flex;
+		align-items: center;
+		border-radius: 20px;
+		border: 2px solid black;
+		padding: 4px 8px;
+		margin-right: 12px;
+		font-size: 20px;
+		cursor: pointer;
+		img {
+			margin-right: 4px;
+		}
+	}
 }
