@@ -22,8 +22,15 @@
 			align-items: center;
 			font-size: 24px;
 			cursor: pointer;
+			img {
+				height: 28px;
+				width: 28px;
+				margin-right: 4px;
+			}
 		}
 		img {
+			height: 24px;
+			width: 24px;
 			margin-left: 20px;
 		}
 	}

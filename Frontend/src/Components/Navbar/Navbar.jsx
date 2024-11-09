@@ -15,7 +15,7 @@ const Navbar = () => {
 				</div>
 			</div>
 			<div className='navbar-center'>
-				<input type='text' name='query' id='query' placeholder='SEARCH' />
+				<input type='text' name='query' id='query' placeholder='Search' />
 				<img src={search_icon} alt='YT' />
 			</div>
 			<div className='navbar-right'>

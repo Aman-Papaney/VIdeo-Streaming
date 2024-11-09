@@ -1,0 +1,29 @@
+.sidebar{
+    height: 92vh;
+    width: 13%;
+    img{
+        width: 32px;
+        height: 32px;
+        margin: 12px 20px;
+    }
+    .ele{
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+    }
+
+    .explore{
+        font-size: 20px;
+        margin-top: 16px;
+        margin-left: 20px
+    }
+    .sidebar-top{
+        border-bottom: 2px solid black;
+        
+    }
+    .sidebar-middle{
+        border-bottom: 2px solid black;
+
+    }
+    
+}
